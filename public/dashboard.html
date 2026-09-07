@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AUXBROKER · Dashboard</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AUXBROKER MONTERREY</h1>
+  </header>
+
+  <main>
+    <!-- Información del asesor -->
+    <section id="info-asesor" class="card">
+      <h2>Bienvenido, <span id="nombreAsesor"></span></h2>
+      <p>Teléfono: <span id="telefonoAsesor"></span></p>
+      <p>Cupos disponibles: <span id="cuposAsesor"></span></p>
+    </section>
+
+    <!-- Menú principal se elimino mism alarms <a href="misalarmas.html">🔔 Mis alarmas</a>-->
+    <nav class="menu">
+      <a href="requerimiento.html">📄 Alta de requerimiento</a>
+      <a href="mi-bolsa.html">💼 Mi bolsa</a>
+      <a href="busquedadinamica.html">🔍 Búsqueda dinámica</a> <!-- 👈 nueva opción -->
+      <a href="ultsolicitudes.html">📑 Últimas solicitudes</a>
+      <a href="seguimientos.html">📌 Seguimientos</a>
+    </nav>
+
+  </main>
+
+  <script type="module">
+    import { supabase } from "/js/supabaseClient.js";
+
+    async function cargarDatosAsesor() {
+      // Confirmar sesión activa en Supabase
+      const { data: sessionData, error: errorSession } = await supabase.auth.getSession();
+
+      if (errorSession) {
+        console.error("❌ Error al obtener sesión:", errorSession);
+        alert("Error al validar sesión");
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (!sessionData.session) {
+        alert("❌ No se encontró sesión activa.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      console.log("🔎 Sesión activa:", sessionData.session);
+
+      // Recuperar correo desde la sesión
+      const correo = sessionData.session.user.email;
+
+      // Buscar datos del miembro en la tabla
+      const { data: miembro, error } = await supabase
+        .from("miembros")
+        .select("nombre, telefono, cupos")
+        .eq("correo", correo)
+        .single();
+
+      if (error || !miembro) {
+        alert("Error al recuperar datos del asesor.");
+        console.error(error);
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Guardar en localStorage para uso global
+      localStorage.setItem("nombreAsesor", miembro.nombre);
+      localStorage.setItem("telefonoAsesor", miembro.telefono);
+      localStorage.setItem("cuposAsesor", miembro.cupos);
+
+      // Mostrar en pantalla
+      document.getElementById("nombreAsesor").textContent = miembro.nombre;
+      document.getElementById("telefonoAsesor").textContent = miembro.telefono;
+      document.getElementById("cuposAsesor").textContent = miembro.cupos;
+    }
+
+    cargarDatosAsesor();
+  </script>
+</body>
+</html>

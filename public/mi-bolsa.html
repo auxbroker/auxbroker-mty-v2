@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AUXBROKER · Mi Bolsa</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    /* Compactar tarjetas */
+    .card {
+      max-width: 700px;
+      margin: 12px auto;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+    }
+
+    .card-header {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .card-body {
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Botones diferenciados */
+    .btn-suspender {
+      padding: 6px 12px;
+      background-color: #f1c40f;
+      color: #000;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-suspender:hover { background-color: #d4ac0d; }
+
+    .btn-activar {
+      padding: 6px 12px;
+      background-color: #2ecc71;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-activar:hover { background-color: #27ae60; }
+
+    .btn-eliminar {
+      padding: 6px 12px;
+      background-color: #e74c3c;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-eliminar:hover { background-color: #c0392b; }
+
+    .btn-guardar {
+      padding: 6px 12px;
+      background-color: #3498db;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-guardar:hover { background-color: #2980b9; }
+
+    /* Estilo para contenido privado */
+    .contenidoPrivado {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .contenido-label {
+      font-size: 13px;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .contenido-hint {
+      font-size: 12px;
+      color: #555;
+      margin-left: 6px;
+      font-style: italic;
+    }
+
+    /* Bloque de filtro */
+    #filtroAlarmas {
+      display: none; /* oculto al inicio */
+      margin: 12px auto;
+      max-width: 700px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    #filtroAlarmas input {
+      flex: 1;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    #filtroAlarmas button {
+      padding: 6px 12px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #btnFiltrar {
+      background-color: #2ecc71;
+      color: #fff;
+    }
+    #btnFiltrar:hover { background-color: #27ae60; }
+
+    #btnReset {
+      background-color: #e67e22;
+      color: #fff;
+    }
+    #btnReset:hover { background-color: #ca6f1e; }
+
+    #btnVolver {
+      background-color: #34495e;
+      color: #fff;
+    }
+    #btnVolver:hover { background-color: #2c3e50; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AUXBROKER MONTERREY</h1>
+  </header>
+
+  <main>
+    <h2>Mi Bolsa</h2>
+
+    <!-- Bloque de filtro (oculto al inicio, se muestra al buscar alarmas) -->
+    <div id="filtroAlarmas">
+      <input type="text" id="palabraClave" placeholder="Filtrar por palabra clave..." />
+      <button id="btnFiltrar">Filtrar</button>
+      <button id="btnReset">Resetear</button>
+      <button id="btnVolver">Volver a Mi Bolsa</button>
+    </div>
+
+    <section id="miBolsaContainer" class="container">
+      <!-- Aquí se cargarán las tarjetas dinámicamente -->
+    </section>
+  </main>
+
+  <!-- Script principal -->
+  <script type="module" src="/js/mi-bolsa.js"></script>
+</body>
+</html>

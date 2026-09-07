@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AUXBROKER MONTERREY - Recuperar Contraseña</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AUXBROKER MONTERREY</h1>
+  </header>
+
+  <main>
+    <form id="form-reset">
+      <h2>Recuperar Contraseña</h2>
+      <p>Ingrese su correo electrónico para recibir un enlace de recuperación.</p>
+      <input type="email" id="correo" placeholder="Correo electrónico" required>
+      <button type="submit">Enviar enlace</button>
+    </form>
+
+    <div class="links">
+      <a href="login.html">Volver al inicio de sesión</a>
+    </div>
+  </main>
+
+  <script type="module">
+    import { supabase } from "../js/supabaseClient.js";
+
+    document.getElementById("form-reset").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const correo = document.getElementById("correo").value.trim();
+      if (!correo) {
+        alert("Ingrese un correo válido.");
+        return;
+      }
+
+      try {
+        // Enviar correo de recuperación con Supabase
+        const { data, error } = await supabase.auth.resetPasswordForEmail(correo, {
+          redirectTo: "http://localhost:3000/public/login.html"
+        });
+
+        if (error) {
+          alert("❌ Error al enviar enlace: " + error.message);
+          return;
+        }
+
+        alert("✅ Se ha enviado un enlace de recuperación a su correo. Revise su bandeja de entrada.");
+      } catch (err) {
+        alert("❌ Error inesperado: " + err.message);
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

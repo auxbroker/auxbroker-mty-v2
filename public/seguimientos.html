@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AUXBROKER · Seguimientos</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <header>
+    <h1>📌 Seguimientos</h1>
+  </header>
+
+  <main>
+    <section id="seguimientosContainer" class="container">
+      <!-- Aquí se cargarán los registros pendientes -->
+    </section>
+  </main>
+
+  <!-- Modal de documentación -->
+  <div id="documentarModal" class="modal">
+    <div class="modal-content">
+      <!-- Título dinámico con teléfono destino -->
+      <h2 id="tituloDocumentar">📌 Documentar Contacto</h2>
+      
+      <form id="formDocumentar">
+        <input type="hidden" id="idContacto" />
+
+        <label for="estadoSeguimiento">Estado de seguimiento:</label>
+        <select id="estadoSeguimiento" required>
+          <option value="documentado">Documentado</option>
+          <option value="activo">Activo</option>
+          <option value="cita">Cita</option>
+          <option value="cerrado">Cerrado</option>
+          <option value="descartado">Descartado</option>
+          <option value="suspendido">Suspendido</option>
+        </select>
+
+        <label for="notas">Notas:</label>
+        <textarea id="notas" rows="4" placeholder="Describe acciones o comentarios..."></textarea>
+
+        <label for="proximoSeguimiento">Próximo seguimiento:</label>
+        <input type="datetime-local" id="proximoSeguimiento" />
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save">💾 Guardar</button>
+        </div>
+      </form>
+
+      <!-- Botón Cancelar fuera del formulario -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" onclick="cerrarModal()">❌ Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/seguimientos.js"></script>
+</body>
+</html>

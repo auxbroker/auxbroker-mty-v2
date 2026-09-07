@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AUXBROKER · Selección de requerimiento</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AUXBROKER MONTERREY</h1>
+  </header>
+
+  <main>
+    <form id="form-seleccion">
+      <h2>Selecciona el tipo de requerimiento</h2>
+      <select id="tipo" required>
+        <option value="">Seleccione</option>
+        <option value="ofrecimiento">Ofrecimiento</option>
+        <option value="solicitud">Solicitud</option>
+      </select>
+      <button type="submit">Continuar</button>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById("form-seleccion").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const tipo = document.getElementById("tipo").value;
+      if (tipo === "ofrecimiento") {
+        window.location.href = "ofrecimiento.html";
+      } else if (tipo === "solicitud") {
+        window.location.href = "solicitud.html";
+      } else {
+        alert("Debes seleccionar un tipo de requerimiento.");
+      }
+    });
+  </script>
+</body>
+</html>
+
+

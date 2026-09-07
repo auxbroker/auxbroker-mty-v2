@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AUXBROKER MONTERREY - Alta Suscriptores</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AUXBROKER MONTERREY</h1>
+  </header>
+
+  <main>
+    <form id="form-suscriptores">
+      <h2>Alta de Suscriptor</h2>
+
+      <input type="text" id="nombre" placeholder="Nombre completo" readonly>
+      <input type="tel" id="telefono" placeholder="Teléfono" readonly>
+      <input type="email" id="correo" placeholder="Correo electrónico" readonly>
+
+      <select id="plan" required>
+        <option value="">Seleccione un plan</option>
+        <option value="Básico">Básico</option>
+        <option value="Premium">Premium</option>
+      </select>
+
+      <!-- Bloque dinámico de términos -->
+      <div class="terminos">
+        <h3>Aviso de Privacidad</h3>
+        <iframe src="terminos.html" class="iframe-terminos"></iframe>
+        <label>
+          <input type="checkbox" id="acepto" required>
+          He leído y acepto los términos y condiciones
+        </label>
+      </div>
+
+      <button type="submit">Registrar</button>
+    </form>
+  </main>
+
+  <script type="module">
+    import { supabase } from "../js/supabaseClient.js";
+
+    // Al cargar la página, rellenar los campos con datos del signup
+    document.getElementById("nombre").value = localStorage.getItem("nombreAsesor") || "";
+    document.getElementById("telefono").value = localStorage.getItem("telefonoAsesor") || "";
+    document.getElementById("correo").value = localStorage.getItem("correoAsesor") || "";
+
+    document.getElementById("form-suscriptores").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById("nombre").value;
+      const telefono = document.getElementById("telefono").value;
+      const correo = document.getElementById("correo").value;
+      const plan = document.getElementById("plan").value;
+      const acepto = document.getElementById("acepto").checked;
+
+      if (!plan || !acepto) {
+        alert("Debes seleccionar un plan y aceptar los términos.");
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("miembros")
+          .insert([
+            { nombre, telefono, correo, plan, aviso_aceptado: true, aviso_aceptado_en: new Date() }
+          ]);
+
+        if (error) {
+          alert("❌ Error al registrar suscriptor: " + error.message);
+          return;
+        }
+
+        alert("✅ Suscriptor registrado correctamente.");
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        alert("❌ Error inesperado: " + err.message);
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
+
