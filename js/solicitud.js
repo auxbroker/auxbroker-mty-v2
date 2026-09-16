@@ -1,10 +1,16 @@
 import { supabase } from "./supabaseClient.js";
+import { loadPartial } from "./utils.js";
+
+// Cargar partials reutilizables
+loadPartial("inmuebleBox", "../public/partials/inmueble.html");
+loadPartial("municipioBox", "../public/partials/municipio.html");
 
 console.log("✅ solicitud.js cargado correctamente");
 
 document.getElementById("form-solicitud").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // Captura de valores
   const operacion = document.getElementById("operacion").value;
   const inmueble = document.getElementById("inmueble").value;
   const municipio = document.getElementById("municipio").value;
@@ -13,13 +19,16 @@ document.getElementById("form-solicitud").addEventListener("submit", async (e) =
   const preciomax = document.getElementById("preciomax").value.trim();
   const contenidoPrivado = document.getElementById("contenidoPrivado")?.value.trim() || "";
 
+  // Validación
   if (!operacion || !inmueble || !municipio || !masdetalle || !preciomin || !preciomax) {
     alert("Completa todos los campos obligatorios.");
     return;
   }
 
   const telefono = localStorage.getItem("telefonoAsesor") || "5544704692";
+  const fechaHoy = new Date().toISOString().split("T")[0];
 
+  // Payload principal
   const payloadBolsa = {
     fuente: "2",
     pais: "52",
@@ -32,8 +41,8 @@ document.getElementById("form-solicitud").addEventListener("submit", async (e) =
     preciomin,
     preciomax,
     estado: "activa",
-    fecha_alta: new Date().toISOString().split("T")[0],
-    publicado_desde: new Date().toISOString().split("T")[0],
+    fecha_alta: fechaHoy,
+    publicado_desde: fechaHoy,
     veces_republicado: 0
   };
 
@@ -47,25 +56,18 @@ document.getElementById("form-solicitud").addEventListener("submit", async (e) =
 
     if (errorBolsa) throw new Error("Error al registrar solicitud: " + errorBolsa.message);
 
-    // Paso 2: Insertar en datosprivados si hay contenido
+    // Paso 2: Insertar en datosprivados si aplica
     if (contenidoPrivado) {
-      const payloadPrivado = {
-        bolsa_id: bolsa.id,
-        contenido: contenidoPrivado
-      };
-
-      const { error: errorPrivado } = await supabase
-        .from("datosprivados")
-        .insert([payloadPrivado]);
+      const payloadPrivado = { bolsa_id: bolsa.id, contenido: contenidoPrivado };
+      const { error: errorPrivado } = await supabase.from("datosprivados").insert([payloadPrivado]);
 
       if (errorPrivado) {
-        // rollback: eliminar bolsa
-        await supabase.from("bolsa").delete().eq("id", bolsa.id);
+        await supabase.from("bolsa").delete().eq("id", bolsa.id); // rollback
         throw new Error("Error al guardar información privada: " + errorPrivado.message);
       }
     }
 
-    // Paso 3: Insertar en alarmas (contrapartida ofrecimiento)
+    // Paso 3: Insertar alarma (contrapartida ofrecimiento)
     const payloadAlarma = {
       telefono,
       bolsa_id: bolsa.id,
@@ -76,7 +78,7 @@ document.getElementById("form-solicitud").addEventListener("submit", async (e) =
       preciomin,
       preciomax,
       ultimo_bolsa_id: 0,
-      fecha: new Date().toISOString().split("T")[0],
+      fecha: fechaHoy,
       visto: "no"
     };
 
@@ -87,7 +89,6 @@ document.getElementById("form-solicitud").addEventListener("submit", async (e) =
       .single();
 
     if (errorAlarma) {
-      // rollback: eliminar bolsa y datosprivados
       await supabase.from("datosprivados").delete().eq("bolsa_id", bolsa.id);
       await supabase.from("bolsa").delete().eq("id", bolsa.id);
       throw new Error("Error al registrar alarma: " + errorAlarma.message);
@@ -101,4 +102,3 @@ document.getElementById("form-solicitud").addEventListener("submit", async (e) =
     console.error(err);
   }
 });
-

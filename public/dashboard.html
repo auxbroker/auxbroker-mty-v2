@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>AUXBROKER · Dashboard</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
   <header>
@@ -18,19 +18,18 @@
       <p>Cupos disponibles: <span id="cuposAsesor"></span></p>
     </section>
 
-    <!-- Menú principal se elimino mism alarms <a href="misalarmas.html">🔔 Mis alarmas</a>-->
+    <!-- Menú principal -->
     <nav class="menu">
       <a href="requerimiento.html">📄 Alta de requerimiento</a>
       <a href="mi-bolsa.html">💼 Mi bolsa</a>
-      <a href="busquedadinamica.html">🔍 Búsqueda dinámica</a> <!-- 👈 nueva opción -->
+      <a href="busquedadinamica.html">🔍 Búsqueda dinámica</a>
       <a href="ultsolicitudes.html">📑 Últimas solicitudes</a>
       <a href="seguimientos.html">📌 Seguimientos</a>
     </nav>
-
   </main>
 
   <script type="module">
-    import { supabase } from "/js/supabaseClient.js";
+    import { supabase } from "../js/supabaseClient.js";
 
     async function cargarDatosAsesor() {
       // Confirmar sesión activa en Supabase
@@ -57,13 +56,19 @@
       // Buscar datos del miembro en la tabla
       const { data: miembro, error } = await supabase
         .from("miembros")
-        .select("nombre, telefono, cupos")
+        .select("nombre, telefono, cupos, estado")
         .eq("correo", correo)
         .single();
 
       if (error || !miembro) {
         alert("Error al recuperar datos del asesor.");
         console.error(error);
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (miembro.estado === "inactivo") {
+        alert("⚠️ Comuníquese con AUXBROKER, su usuario aún permanece inactivo.");
         window.location.href = "login.html";
         return;
       }

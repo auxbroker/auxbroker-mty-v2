@@ -1,7 +1,5 @@
-import { supabase } from "./supabaseClient.js";
-import { mostrarOpcionesContacto } from "./contact-utils.js";
-
-// console.log("✅ ultsolicitudes.js cargado correctamente");
+import { supabase } from "../js/supabaseClient.js";
+import { mostrarOpcionesContacto } from "../js/contact-utils.js";
 
 document.addEventListener("DOMContentLoaded", cargarSolicitudes);
 
@@ -22,9 +20,9 @@ async function cargarSolicitudes() {
   const { data: solicitudes, error } = await supabase
     .from("bolsa")
     .select("*")
-    .eq("requerimiento", "solicitud") // 👈 solo solicitudes
-    .neq("telefono", telefonoAsesorGlobal) // 👈 excluir al asesor autenticado
-    .gte("fecha_alta", fechaLimiteISO) // 👈 solo solicitudes recientes (<= 10 días)
+    .eq("requerimiento", "solicitud")
+    .neq("telefono", telefonoAsesorGlobal)
+    .gte("fecha_alta", fechaLimiteISO)
     .order("fecha_alta", { ascending: false });
 
   if (error) {
@@ -43,7 +41,6 @@ async function cargarSolicitudes() {
   contador.style.fontWeight = "bold";
   contenedor.appendChild(contador);
 
-  // Renderizar cada solicitud con estilo unificado
   solicitudes.forEach((item) => {
     const tarjeta = document.createElement("div");
     tarjeta.className = "solicitud-card";
@@ -65,15 +62,18 @@ async function cargarSolicitudes() {
     btnContactar.textContent = "Contactar";
 
     btnContactar.addEventListener("click", () => {
-      mostrarOpcionesContacto(tarjeta, item.telefono, item.pais, detalleTexto);
+      // 👇 mostramos el idBolsa por consola para validar
+      console.log("🆔 Bolsa ID:", item.id);
 
-      // Botón para cerrar contacto y regresar a solicitudes
+      // Pasamos el idBolsa a la función de contacto
+      mostrarOpcionesContacto(tarjeta, item.telefono, item.pais, detalleTexto, item.id);
+
       const btnCerrar = document.createElement("button");
       btnCerrar.className = "btn-cerrar";
       btnCerrar.textContent = "Cerrar contacto";
 
       btnCerrar.addEventListener("click", () => {
-        cargarSolicitudes(); // Regresa a la lista inicial
+        cargarSolicitudes();
       });
 
       tarjeta.appendChild(btnCerrar);
@@ -87,3 +87,4 @@ async function cargarSolicitudes() {
     contenedor.appendChild(tarjeta);
   });
 }
+

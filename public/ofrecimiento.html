@@ -14,7 +14,6 @@
     <form id="form-ofrecimiento">
       <h2>Alta de Ofrecimiento</h2>
 
-      <!-- Tipo de operación -->
       <div class="field">
         <select id="operacion" required>
           <option value="">Seleccione operación</option>
@@ -23,45 +22,30 @@
         </select>
       </div>
 
-      <!-- Tipo de inmueble (partial) -->
       <div id="inmuebleBox" class="field"></div>
-
-      <!-- Municipio (partial) -->
       <div id="municipioBox" class="field"></div>
 
-      <!-- Descripción -->
       <div class="field">
         <textarea id="descripcion" rows="5" placeholder="Describa el inmueble y denote lo más relevante" required></textarea>
       </div>
 
-      <!-- Precio -->
       <div class="field">
-        <input type="number" id="precio" placeholder="Precio" min="0" required>
+        <input type="number" id="precio" placeholder="Precio único" min="0" required>
       </div>
 
-      <!-- Información privada -->
       <div class="field">
         <textarea id="contenidoPrivado" rows="3" placeholder="Información privada (solo asesores suscritos)"></textarea>
       </div>
 
-      <!-- Botón -->
       <button type="submit">Registrar</button>
     </form>
   </main>
 
-  <script type="module">
-    async function loadPartial(id, file) {
-      const resp = await fetch(file);
-      const html = await resp.text();
-      document.getElementById(id).innerHTML = html;
-    }
-
-    loadPartial("inmuebleBox", "/public/partials/inmueble.html");
-    loadPartial("municipioBox", "/public/partials/municipio.html");
-
-    import "../js/ofrecimiento.js";
-  </script>
+  <!-- Solo un script principal -->
+  <script type="module" src="../js/ofrecimiento.js"></script>
 </body>
 </html>
+
+
 
 

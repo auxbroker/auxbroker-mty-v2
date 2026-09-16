@@ -68,8 +68,6 @@ async function cargarSeguimientos() {
 }
 
 function abrirFormularioDocumentar(idContacto, telefonoDestino) {
-  // console.log("📌 Abriendo modal para contacto:", idContacto, telefonoDestino);
-
   // Asignar idContacto al campo oculto
   document.getElementById("idContacto").value = idContacto;
 
@@ -77,7 +75,7 @@ function abrirFormularioDocumentar(idContacto, telefonoDestino) {
   const tituloModal = document.getElementById("tituloDocumentar");
   tituloModal.textContent = `📌 Documentar Contacto ${telefonoDestino}`;
 
-  // Mostrar modal (asegúrate que en CSS .modal tenga display:flex)
+  // Mostrar modal
   document.getElementById("documentarModal").style.display = "flex";
 }
 
@@ -97,21 +95,44 @@ document.getElementById("formDocumentar").addEventListener("submit", async (e) =
 
   console.log("💾 Guardando contacto:", { idContacto, estadoSeguimiento, notas, proximoSeguimiento });
 
-  const { error } = await supabase
+  // 1️⃣ Actualizar el contacto y recuperar bolsa_id
+  const { data: contactoActualizado, error } = await supabase
     .from("contactos")
     .update({
       estado_seguimiento: estadoSeguimiento,
       notas: notas,
       proximo_seguimiento: proximoSeguimiento || null,
     })
-    .eq("id_contacto", idContacto);
+    .eq("id_contacto", idContacto)
+    .select("bolsa_id"); // 👈 recuperamos bolsa_id
 
   if (error) {
     alert("❌ Error al actualizar contacto: " + error.message);
     console.error(error);
-  } else {
-    alert("✅ Contacto documentado correctamente.");
-    cerrarModal();
-    cargarSeguimientos(); // refrescar lista
+    return;
   }
+
+  alert("✅ Contacto documentado correctamente.");
+
+  // 2️⃣ Si el seguimiento es 'nodisponible', actualizar bolsa → estado = 'inactivo'
+  if (estadoSeguimiento === "nodisponible" && contactoActualizado && contactoActualizado.length > 0) {
+    const bolsaId = contactoActualizado[0].bolsa_id;
+    if (bolsaId) {
+      const { error: errorBolsa } = await supabase
+        .from("bolsa")
+        .update({ estado: "inactivo" })
+        .eq("id", bolsaId);
+
+      if (errorBolsa) {
+        console.error("❌ Error al actualizar bolsa:", errorBolsa.message);
+      } else {
+        console.log("✅ Bolsa marcada como inactiva, id:", bolsaId);
+      }
+    } else {
+      console.warn("⚠️ El contacto no tiene bolsa_id asociado.");
+    }
+  }
+
+  cerrarModal();
+  cargarSeguimientos(); // refrescar lista
 });

@@ -3,9 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>AUXBROKER MONTERREY - Menú Inicial</title>
-  <!-- Rutas absolutas para asegurar carga desde cualquier raíz -->
-  <link rel="stylesheet" href="/assets/styles.css">
-  <script type="module" src="/js/supabaseClient.js"></script>
+
+  <!-- 👇 Ajuste clave para que el navegador use el ancho real y no escale como móvil -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Referencias correctas -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="module" src="js/supabaseClient.js"></script>
+
+  <!-- Ajustes mínimos para asegurar legibilidad -->
+  <style>
+    body { font-size: 18px; line-height: 1.6; }
+    header h1 { font-size: 32px; }
+    main h2 { font-size: 24px; }
+    .menu a { font-size: 18px; padding: 14px 20px; }
+  </style>
 </head>
 <body>
   <header>
@@ -16,9 +28,9 @@
     <h2>Bienvenido</h2>
     <p>Tu Lugar donde la Alianza se convierte en oportunidad</p>
     <div class="menu">
-      <a href="/public/signup.html">📝 Signup (Registro)</a>
-      <a href="/public/login.html">🔑 Signon (Inicio de sesión)</a>
-      <a href="/public/reset.html">🔒 Reset Password</a>
+      <a href="public/signup.html">📝 Signup (Registro)</a>
+      <a href="public/login.html">🔑 Signon (Inicio de sesión)</a>
+      <a href="public/reset.html">🔒 Reset Password</a>
     </div>
   </main>
 </body>

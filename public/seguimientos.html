@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>AUXBROKER · Seguimientos</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
   <header>
@@ -19,7 +19,6 @@
   <!-- Modal de documentación -->
   <div id="documentarModal" class="modal">
     <div class="modal-content">
-      <!-- Título dinámico con teléfono destino -->
       <h2 id="tituloDocumentar">📌 Documentar Contacto</h2>
       
       <form id="formDocumentar">
@@ -31,6 +30,7 @@
           <option value="activo">Activo</option>
           <option value="cita">Cita</option>
           <option value="cerrado">Cerrado</option>
+          <option value="nodisponible">Nodisponible</option>
           <option value="descartado">Descartado</option>
           <option value="suspendido">Suspendido</option>
         </select>
@@ -46,13 +46,12 @@
         </div>
       </form>
 
-      <!-- Botón Cancelar fuera del formulario -->
       <div class="form-actions">
         <button type="button" class="btn-cancel" onclick="cerrarModal()">❌ Cancelar</button>
       </div>
     </div>
   </div>
 
-  <script type="module" src="/js/seguimientos.js"></script>
+  <script type="module" src="../js/seguimientos.js"></script>
 </body>
 </html>

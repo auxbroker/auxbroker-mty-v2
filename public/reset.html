@@ -23,35 +23,9 @@
     </div>
   </main>
 
-  <script type="module">
-    import { supabase } from "../js/supabaseClient.js";
-
-    document.getElementById("form-reset").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const correo = document.getElementById("correo").value.trim();
-      if (!correo) {
-        alert("Ingrese un correo válido.");
-        return;
-      }
-
-      try {
-        // Enviar correo de recuperación con Supabase
-        const { data, error } = await supabase.auth.resetPasswordForEmail(correo, {
-          redirectTo: "http://localhost:3000/public/login.html"
-        });
-
-        if (error) {
-          alert("❌ Error al enviar enlace: " + error.message);
-          return;
-        }
-
-        alert("✅ Se ha enviado un enlace de recuperación a su correo. Revise su bandeja de entrada.");
-      } catch (err) {
-        alert("❌ Error inesperado: " + err.message);
-        console.error(err);
-      }
-    });
-  </script>
+  <!-- Solo un script principal -->
+  <script type="module" src="../js/reset.js"></script>
 </body>
 </html>
+
+

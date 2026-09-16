@@ -7,8 +7,12 @@ import { supabase } from "./supabaseClient.js";
  * @param {string} telefonoEmisor - Teléfono del asesor emisor (destino)
  * @param {string} pais - Código de país (ej. 52 para México)
  * @param {string} textoInteres - Contenido del mensaje (masdetalle)
+ * @param {number} idBolsa - Identificador del registro en la tabla "bolsa"
  */
-export async function mostrarOpcionesContacto(tarjeta, telefonoEmisor, pais, textoInteres) {
+export async function mostrarOpcionesContacto(tarjeta, telefonoEmisor, pais, textoInteres, idBolsa) {
+  // 👇 Validación: mostrar el idBolsa recibido
+  console.log("🆔 mostrarOpcionesContacto recibió bolsa_id:", idBolsa);
+
   // Mostrar teléfono y botones
   const telefonoDiv = document.createElement("div");
   telefonoDiv.innerHTML = `
@@ -40,19 +44,20 @@ export async function mostrarOpcionesContacto(tarjeta, telefonoEmisor, pais, tex
   const telefonoOrigen = miembro.telefono;
   const nuevoCupo = miembro.cupos - 1;
 
-  // 1️⃣ Registrar contacto en tabla "contactos"
+  // 1️⃣ Registrar contacto en tabla "contactos" con bolsa_id
   const { error: errorContacto } = await supabase
     .from("contactos")
     .insert([{
       telefono_origen: telefonoOrigen,
       telefono_destino: telefonoEmisor,
       texto_de_interes: textoInteres,
+      bolsa_id: idBolsa || null   // 👈 nuevo campo
     }]);
 
   if (errorContacto) {
     console.error("❌ Error al registrar contacto:", errorContacto.message);
   } else {
-    console.log("✅ Contacto registrado correctamente");
+    console.log("✅ Contacto registrado correctamente con bolsa_id:", idBolsa);
   }
 
   // 2️⃣ Rebajar cupos del miembro autenticado
@@ -69,6 +74,4 @@ export async function mostrarOpcionesContacto(tarjeta, telefonoEmisor, pais, tex
     cupoDiv.textContent = `✅ Tu nuevo saldo de cupos es: ${actualizado[0].cupos}`;
     tarjeta.appendChild(cupoDiv);
   }
-
-  // ❌ Aquí ya NO forzamos retorno
 }
